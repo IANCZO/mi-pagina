@@ -49,3 +49,52 @@ if (spanPuntos) {
 if (spanUsuario) {
     spanUsuario.textContent = usuario;
 } 
+
+let musica = document.getElementById("musica");
+let paginaActual = window.location.pathname;
+
+function reproducir(){
+    musica.play().catch(error => {
+        console.log("Audio bloqueado por el navegador. Esperando interacción...");
+
+        document.addEventListener('click', () => {
+            musica.play();
+        }, { once: true });
+    });
+}
+
+if(paginaActual.includes("index.html") || paginaActual == "/"){
+    setTimeout(function(){
+        musica.src = "audios/inicio.mp3";
+
+        musica.play().catch(error => {
+            console.log("Audio de inicio bloqueado por el navegador. Esperando primer clic...");
+
+            document.addEventListener('click', () => {
+                musica.play(); 
+            }, { once: true });
+        });
+    }, 500);
+
+
+} else if (paginaActual.includes("cuestionario.html")) {
+    setTimeout(function(){
+        musica.src = "audios/preguntas.mp3";
+        musica.loop = true;
+        reproducir();
+    }, 500);
+
+} else if (paginaActual.includes("fin.html")){
+    let puntaje = parseInt(localStorage.getItem("Total")) || 0;
+
+    setTimeout(function() {
+        if(puntaje > 7){
+            musica.src = "audios/mayor7.mp3";
+        } else if (puntaje >= 4 && puntaje <=7){
+            musica.src = "audios/entre4y7.mp3";
+        } else {
+            musica.src = "audios/menor4.mp3";
+        }
+        reproducir();
+    }, 500);
+}
